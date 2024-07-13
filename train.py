@@ -56,8 +56,8 @@ def run():
             epoch_loss.append(loss.item())
             optimizer.step()
             scheduler.step()
-            if num >= 3000:
-                break
+            # if num >= 3000:
+            #     break
         loss_vals.append(np.mean(epoch_loss))
     logger.info("*"*15+"End Training"+"*"*15)
     model.save_pretrained(SAVED_DIR)
