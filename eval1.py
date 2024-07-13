@@ -5,7 +5,7 @@ from transformers import BertTokenizer
 from model import MRCModel
 from load_data import TEST_DATA_PATH, tempalte, MAX_LEN
 
-tokenizer = BertTokenizer.from_pretrained('/home/zhk/workstation/bert-crf/bert-base-chinese')
+tokenizer = BertTokenizer.from_pretrained('./bert-base-chinese')
 device = "cuda" if torch.cuda.is_available() else 'cpu'
 model = MRCModel.from_pretrained('./saved_model')
 model.to(device)

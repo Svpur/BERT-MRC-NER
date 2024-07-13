@@ -8,7 +8,7 @@ TEST_DATA_PATH = './data/test_data.txt'
 TOKENIZER_PATH = './bert-base-chinese'
 BATCH_SIZE = 32
 # MAX_LEN = 128 
-MAX_LEN = 256-2
+MAX_LEN = 256
 tempalte = [("请找出句子中提及的药物", "DRUG"), ("请找出句子中提及的解剖部位", "BODY"), ("请找出句子中提及的疾病和诊断", "DISEASES"),
             ("请找出句子中提及的影像检查", "EXAMINATIONS"), ("请找出句子中提及的实验室检验", "TEST"), ("请找出句子中提及的手术", "TREATMENT")]
 

@@ -40,6 +40,9 @@ def run():
         num = 0
         pbar = tqdm(traindataloader)
         pbar.set_description("[Train Epoch {}]".format(epoch))
+        if (epoch+1) % 5 == 0:
+            model.save_pretrained(SAVED_DIR)
+
         for batch_idx, batch_data in enumerate(pbar):
             input_ids = batch_data["input_ids"].to(device)
             attention_mask = batch_data["attention_mask"].to(device)
