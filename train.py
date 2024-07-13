@@ -7,7 +7,7 @@ from transformers import AdamW, get_linear_schedule_with_warmup
 from model import MRCModel
 from load_data import traindataloader
 
-N_EPOCHES = 30
+N_EPOCHES = 1
 LR = 5e-5
 WARMUP_PROPORTION = 0.1
 MAX_GRAD_NORM = 1.0
