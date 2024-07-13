@@ -120,7 +120,7 @@ class NERDataset(tud.Dataset):
 
 
 traindataset = NERDataset(TRAIN_DATA_PATH, TOKENIZER_PATH, MAX_LEN)
-traindataloader = tud.DataLoader(traindataset, BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=0)
+traindataloader = tud.DataLoader(traindataset, BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=20)
 # for idx, data in enumerate(traindataloader):
 #     print(data["start_ids"].shape)  # torch.Size([16, 128])
 #     print(data["start_ids"].view(-1).shape)  # torch.Size([16, 128])

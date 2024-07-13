@@ -11,8 +11,8 @@ N_EPOCHES = 30
 LR = 5e-5
 WARMUP_PROPORTION = 0.1
 MAX_GRAD_NORM = 1.0
-# MODEL_PATH = './bert-base-chinese'
-MODEL_PATH = 'google-bert/bert-base-chinese'
+MODEL_PATH = './bert-base-chinese'
+# MODEL_PATH = 'google-bert/bert-base-chinese'
 SAVED_DIR = './saved_model'
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
