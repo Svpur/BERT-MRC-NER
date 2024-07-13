@@ -7,7 +7,8 @@ TRAIN_DATA_PATH = './data/train_data.txt'
 TEST_DATA_PATH = './data/test_data.txt'
 TOKENIZER_PATH = './bert-base-chinese'
 BATCH_SIZE = 32
-MAX_LEN = 128
+# MAX_LEN = 128 
+MAX_LEN = 256-2
 tempalte = [("请找出句子中提及的药物", "DRUG"), ("请找出句子中提及的解剖部位", "BODY"), ("请找出句子中提及的疾病和诊断", "DISEASES"),
             ("请找出句子中提及的影像检查", "EXAMINATIONS"), ("请找出句子中提及的实验室检验", "TEST"), ("请找出句子中提及的手术", "TREATMENT")]
 
@@ -120,7 +121,7 @@ class NERDataset(tud.Dataset):
 
 
 traindataset = NERDataset(TRAIN_DATA_PATH, TOKENIZER_PATH, MAX_LEN)
-traindataloader = tud.DataLoader(traindataset, BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=20)
+traindataloader = tud.DataLoader(traindataset, BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=4)
 # for idx, data in enumerate(traindataloader):
 #     print(data["start_ids"].shape)  # torch.Size([16, 128])
 #     print(data["start_ids"].view(-1).shape)  # torch.Size([16, 128])
