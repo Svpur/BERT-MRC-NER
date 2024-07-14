@@ -8,8 +8,12 @@ TEST_DATA_PATH = './data/test_data.txt'
 TOKENIZER_PATH = './bert-base-chinese'
 BATCH_SIZE = 32
 MAX_LEN = 256
-tempalte = [("请找出句子中提及的药物", "DRUG"), ("请找出句子中提及的解剖部位", "BODY"), ("请找出句子中提及的疾病和诊断", "DISEASES"),
-            ("请找出句子中提及的影像检查", "EXAMINATIONS"), ("请找出句子中提及的实验室检验", "TEST"), ("请找出句子中提及的手术", "TREATMENT")]
+tempalte = [("请找出句子中提及的药物，指用于疾病治疗的具体化学物质", "DRUG"),
+            ("请找出句子中提及的解剖部位，指疾病、症状和体征发生的人体解剖学部位", "BODY"),
+            ("请找出句子中提及的疾病和诊断，指医学上定义的疾病和医生在临床工作中对病因、病生理、分型分期等所作的判断", "DISEASES"),
+            ("请找出句子中提及的检查，指影像检查（X线、CT、MR、PETCT等）+造影+超声+心电图", "EXAMINATIONS"),
+            ("请找出句子中提及的检验，指在实验室进行的物理或化学检查", "TEST"),
+            ("请找出句子中提及的手术，指医生在患者身体局部进行的切除、缝合等治疗，是外科的主要治疗方法", "TREATMENT")]
 
 
 def collate_fn(batch_data):
@@ -128,10 +132,10 @@ class NERDataset(tud.Dataset):
 
 
 traindataset = NERDataset(TRAIN_DATA_PATH, TOKENIZER_PATH, MAX_LEN)
-traindataloader = tud.DataLoader(traindataset, BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=0)
+traindataloader = tud.DataLoader(traindataset, BATCH_SIZE, shuffle=True, collate_fn=collate_fn, num_workers=0)
 # for idx, data in enumerate(traindataloader):
-#     print(data["start_ids"].shape)  # torch.Size([16, 128])
-#     print(data["start_ids"].view(-1).shape)  # torch.Size([16, 128])
+#     print(data["start_ids"].shape)  # torch.Size([32, 256])
+#     print(data["start_ids"].view(-1).shape)  # torch.Size([32, 256])
 #     break
 # print(len(traindataset))
 # print(traindataset.__getitem__(0))
