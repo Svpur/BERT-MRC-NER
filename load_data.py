@@ -7,7 +7,6 @@ TRAIN_DATA_PATH = './data/train_data.txt'
 TEST_DATA_PATH = './data/test_data.txt'
 TOKENIZER_PATH = './bert-base-chinese'
 BATCH_SIZE = 32
-# MAX_LEN = 128 
 MAX_LEN = 256
 tempalte = [("请找出句子中提及的药物", "DRUG"), ("请找出句子中提及的解剖部位", "BODY"), ("请找出句子中提及的疾病和诊断", "DISEASES"),
             ("请找出句子中提及的影像检查", "EXAMINATIONS"), ("请找出句子中提及的实验室检验", "TEST"), ("请找出句子中提及的手术", "TREATMENT")]
@@ -51,6 +50,7 @@ class NERDataset(tud.Dataset):
         self.data_set = []
         with open(data_path, encoding='utf-8') as rf:
             for line in rf:
+                line = line.split('\n')[0]
                 char = line.split('\t')[0]
                 label = line.split('\t')[1]
                 if char != '。':
@@ -62,22 +62,29 @@ class NERDataset(tud.Dataset):
                     for predix, target in tempalte:
                         # Predix是问题的前缀
                         # target是目标类型
-                        input_ids_1 = [tokenizer.convert_tokens_to_ids(c) for c in predix]  # inputs_ids_1表示输入模板的token id
+                        # inputs_ids_1表示输入模板的token id
+                        input_ids_1 = [tokenizer.convert_tokens_to_ids(c) for c in predix]
                         input_ids_1 = [tokenizer.cls_token_id] + input_ids_1 + [tokenizer.sep_token_id]
-
-                        # Bert两个句子进行拼接时候，token_type_ids:在第一个句子的位置为0，第二个句子为1
+                        # Bert两个句子进行拼接时候，token_type_ids:在第一个句子的位置为0，第二个句子为1，也就是不计入问题向量
                         token_type_ids_1 = [0]*len(input_ids_1)
-                        start_ids_1 = end_ids_1 = [-100]*len(input_ids_1)
-                        if len(chars)+1+len(input_ids_1)>max_len:
+                        start_ids_1 = end_ids_1 = [-100]*len(input_ids_1)  # 无效的标签
+
+                        # 长度裁剪到max_len以内
+                        if len(chars)+1+len(input_ids_1) > max_len:
                             chars = chars[:max_len-1-len(input_ids_1)]
                             labels = labels[:max_len-1-len(input_ids_1)]
-                        input_ids_2 = [tokenizer.convert_tokens_to_ids(c) for c in chars]  # inputs_ids_2表示数据集中每句话的token id
+
+                        # inputs_ids_2表示数据集中每句话的token id
+                        input_ids_2 = [tokenizer.convert_tokens_to_ids(c) for c in chars]
                         input_ids_2 = input_ids_2 + [tokenizer.sep_token_id]
                         token_type_ids_2 = [1]*len(input_ids_2)
+
                         labels_ = labels + ["O"]  # 加的O是[seq]的类型
-                        start_ids_2, end_ids_2 = self.get_ids(target, labels_)
+                        start_ids_2, end_ids_2 = self.get_ids(target, labels_)  # chars里所有实体的起始位置和结束位置
+                        # 最后那个[seq]的起始位置信息是无效的
                         start_ids_2[-1] = -100
                         end_ids_2[-1] = -100
+
                         input_ids = input_ids_1 + input_ids_2
                         token_type_ids = token_type_ids_1 + token_type_ids_2
                         start_ids = start_ids_1 + start_ids_2
@@ -121,7 +128,7 @@ class NERDataset(tud.Dataset):
 
 
 traindataset = NERDataset(TRAIN_DATA_PATH, TOKENIZER_PATH, MAX_LEN)
-traindataloader = tud.DataLoader(traindataset, BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=4)
+traindataloader = tud.DataLoader(traindataset, BATCH_SIZE, shuffle=False, collate_fn=collate_fn, num_workers=0)
 # for idx, data in enumerate(traindataloader):
 #     print(data["start_ids"].shape)  # torch.Size([16, 128])
 #     print(data["start_ids"].view(-1).shape)  # torch.Size([16, 128])
